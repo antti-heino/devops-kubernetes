@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pong-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pong
+  template:
+    metadata:
+      labels:
+        app: pong
+    spec:
+      volumes:
+        - name: shared-storage
+          persistentVolumeClaim:
+            claimName: logoutput-claim
+      containers:
+        - name: pong
+          image: anttitmh/pong
+          volumeMounts: 
+          - name: shared-storage
+            mountPath: /usr/src/app/files
