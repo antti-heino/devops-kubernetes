@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logoutput-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logoutput
+  template:
+    metadata:
+      labels:
+        app: logoutput
+    spec:
+      volumes: 
+        - name: shared-storage
+          emptyDir: {}
+      containers:
+        - name: logoutput
+          image: anttitmh/logoutput
+          volumeMounts: 
+          - name: shared-storage
+            mountPath: /usr/src/app/files
+          containers:
+        - name: logoutput-reader
+          image: anttitmh/logoutput-reader
+          volumeMounts: 
+          - name: shared-storage
+            mountPath: /usr/src/app/files
