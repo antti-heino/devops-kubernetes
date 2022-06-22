@@ -1,0 +1,1 @@
+Image is fetced using a interval after midnight and if it doesn't exist (f.ex. first request) it is downloaded and saved to storage.
