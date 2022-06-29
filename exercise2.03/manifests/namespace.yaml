@@ -4,5 +4,4 @@ metadata:
   name: app
   labels:
     name: app
-kubectl apply -f namespace.yaml
 
