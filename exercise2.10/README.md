@@ -1,0 +1,1 @@
+express-winston logger added and configured to log all http requests. Additionally todo POST's message length is verified to be <=140, if not 400 bad request is returned 
