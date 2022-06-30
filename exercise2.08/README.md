@@ -1,0 +1,1 @@
+Applying all yaml-files creates frontend, backend and postgres-server with necessary secrets and configurations
