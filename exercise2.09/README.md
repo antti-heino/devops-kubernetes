@@ -1,0 +1,1 @@
+Applying cron.yaml creates a pod with a single bash script file (which post random wiki article to backend) which is scheduled to be executed once a day at 0:00
