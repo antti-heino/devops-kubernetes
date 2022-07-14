@@ -28,7 +28,7 @@ jobs:
         run: echo "DOCKER_IMAGE=gcr.io/${{ secrets.GKE_PROJECT }}/$IMAGE:${GITHUB_REF#refs/heads/}$GITHUB_SHA" >> $GITHUB_ENV
       - name: Build
         run: |-
-            cd ./master/exercise3.03/Server
+            cd ./exercise3.03/Server/
             docker build --tag "$DOCKER_IMAGE" .  
       - name: Publish
         run: docker push "$DOCKER_IMAGE"
