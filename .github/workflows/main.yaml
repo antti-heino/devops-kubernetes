@@ -34,4 +34,11 @@ jobs:
         run: docker push "$DOCKER_IMAGE"
       - name: Set up Kustomize
         uses: imranismail/setup-kustomize@v1
+      - name: Deploy
+        run: |-
+            cd ./exercise3.03/
+            kustomize edit set image PROJECT/IMAGE=$DOCKER_IMAGE
+            kustomize build . | kubectl apply -f manifests/
+            kubectl rollout status deployment $IMAGE
+            kubectl get services -o wide
 
