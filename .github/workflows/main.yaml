@@ -36,7 +36,7 @@ jobs:
         uses: imranismail/setup-kustomize@v1
       - name: Deploy
         run: |-
-            cd ./exercise3.03/manifests/
+            cd ./exercise3.03/
             kustomize edit set image PROJECT/IMAGE=$DOCKER_IMAGE
             kustomize build . | kubectl apply -f manifests/
             kubectl rollout status deployment $IMAGE
