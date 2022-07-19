@@ -8,7 +8,7 @@ env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: dwk-cluster
   GKE_ZONE: europe-north1-a
-  IMAGE: server
+  IMAGE: frontend
 jobs:
   build-publish-deploy:
     name: Build, Publish and Deploy
@@ -28,7 +28,7 @@ jobs:
         run: echo "DOCKER_IMAGE=gcr.io/${{ secrets.GKE_PROJECT }}/$IMAGE:${GITHUB_REF#refs/heads/}$GITHUB_SHA" >> $GITHUB_ENV
       - name: Build
         run: |-
-            cd ./exercise3.04/Server/
+            cd ./exercise3.03/frontend/
             docker build --tag "$DOCKER_IMAGE" .  
       - name: Publish
         run: docker push "$DOCKER_IMAGE"
@@ -36,10 +36,7 @@ jobs:
         uses: imranismail/setup-kustomize@v1
       - name: Deploy
         run: |-
-            cd ./exercise3.04/
-            kubectl create namespace ${GITHUB_REF#refs/heads/} || true
-            kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
-            kustomize edit set namespace ${GITHUB_REF#refs/heads/}  
+            cd ./exercise3.03/
+            kustomize edit set namespace project 
             kustomize edit set image PROJECT/IMAGE=$DOCKER_IMAGE
             kubectl apply -k . 
-
