@@ -37,20 +37,27 @@ const client = new Client({
 
     client.connect(function(err) {
     
-      let existsQuery = `SELECT count(*) FROM information_schema.tables WHERE table_name = 'todo';`;
-      client.query(existsQuery, (err, res) => {
-        var rowCount = Number(res.rows[0].count)
-        console.log(rowCount) 
-    
-        if (rowCount===0) {
-          let createQuery = `CREATE TABLE todo(id SERIAL PRIMARY KEY, task VARCHAR(140) UNIQUE);`
-          client.query(createQuery, (err, res) => {
-            if (err) {
-                console.error(err);
-            }
-          })
+      try {
+        
+      
+        let existsQuery = `SELECT count(*) FROM information_schema.tables WHERE table_name = 'todo';`;
+        client.query(existsQuery, (err, res) => {
+          var rowCount = Number(res.rows[0].count)
+          console.log(rowCount) 
+      
+          if (rowCount===0) {
+            let createQuery = `CREATE TABLE todo(id SERIAL PRIMARY KEY, task VARCHAR(140) UNIQUE);`
+            client.query(createQuery, (err, res) => {
+              if (err) {
+                  console.error(err);
+              }
+            })
+          }
+          }) 
+        } catch (error) {
+          console.log(error) 
         }
-        }) 
+      
       })
     
     const downloadImage = (url, path) =>
