@@ -1,0 +1,29 @@
+name: Delete deployment
+
+on:
+  workflow_dispatch:
+    
+env:
+  GKE_CLUSTER: dwk-cluster
+  GKE_ZONE: europe-north1-a
+  DEPLOYMENT_NAME: project-delete
+
+jobs:
+  delete-env:
+    name: delete env
+    runs-on: ubuntu-latest
+
+    steps:    
+    - uses: google-github-actions/setup-gcloud@master
+      with:
+        project_id: ${{ secrets.GKE_PROJECT }}
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+        export_default_credentials: true
+    
+    - run: gcloud --quiet auth configure-docker
+
+    - run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE" --project "${{ secrets.GKE_PROJECT }}"
+        
+    - name: Delete
+      run: |-
+        kubectl delete namespace ${GITHUB_REF#refs/heads/} || true 
