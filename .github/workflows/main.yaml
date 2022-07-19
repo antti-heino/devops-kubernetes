@@ -40,6 +40,4 @@ jobs:
             kustomize edit set namespace project 
             kustomize edit set image PROJECT/IMAGE=$DOCKER_IMAGE
             kubectl apply -k . 
-            kubectl rollout status deployment $IMAGE
-            kubectl get services -o wide
 
