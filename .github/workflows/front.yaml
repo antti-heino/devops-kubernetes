@@ -37,6 +37,8 @@ jobs:
       - name: Deploy
         run: |-
             cd ./exercise3.03/
-            kustomize edit set namespace project 
+            kubectl create namespace ${GITHUB_REF#refs/heads/} || true
+            kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
+            kustomize edit set namespace ${GITHUB_REF#refs/heads/}  
             kustomize edit set image PROJECT/IMAGE=$DOCKER_IMAGE
             kubectl apply -k . 
