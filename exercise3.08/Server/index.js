@@ -3,8 +3,8 @@ const fs = require('fs');
 const axios = require('axios')
 const path = require('path')
 const app = express()
-const winston = require('winston'),
-const expressWinston = require('express-winston');
+//const winston = require('winston'),
+//const expressWinston = require('express-winston');
 const router = express.Router()
 const port = process.env.PORT || 3001
 const imageUrl = 'https://picsum.photos/1200'
@@ -75,7 +75,7 @@ const client = new Client({
     );
 
 //Add express-winston logger, logs all http requests
-app.use(expressWinston.logger({
+/*app.use(expressWinston.logger({
   transports: [
     new winston.transports.Console()
   ],
@@ -83,7 +83,7 @@ app.use(expressWinston.logger({
     winston.format.colorize(),
     winston.format.json()
   )
-}));
+}));*/
 
 app.use('/', router);
 app.use(express.json()) 
