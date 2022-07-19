@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-dep
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+        - name: server
+          image: anttitmh/server
+          envFrom:
+            - secretRef:
+                name: pgsecret
+          resources:
+            limits:
+              cpu: "150m"
+              memory: "100Mi"
