@@ -1,0 +1,1 @@
+- main.yaml and front.yaml modified to support builds/deployments from multiple branches
