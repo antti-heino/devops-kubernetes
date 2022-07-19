@@ -1,0 +1,42 @@
+name: Release application
+
+on:
+  workflow_dispatch:
+  push:
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: dwk-cluster
+  GKE_ZONE: europe-north1-a
+  IMAGE: frontend
+jobs:
+  build-publish-deploy:
+    name: Build, Publish and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GKE_PROJECT }}
+          service_account_key: ${{ secrets.GKE_SA_KEY }}
+          export_default_credentials: true
+      - run: gcloud --quiet auth configure-docker
+      - run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+      - name: Create image name and tag
+        run: echo "DOCKER_IMAGE=gcr.io/${{ secrets.GKE_PROJECT }}/$IMAGE:${GITHUB_REF#refs/heads/}$GITHUB_SHA" >> $GITHUB_ENV
+      - name: Build
+        run: |-
+            cd ./exercise3.03/frontend/
+            docker build --tag "$DOCKER_IMAGE" .  
+      - name: Publish
+        run: docker push "$DOCKER_IMAGE"
+      - name: Set up Kustomize
+        uses: imranismail/setup-kustomize@v1
+      - name: Deploy
+        run: |-
+            cd ./exercise3.03/
+            kustomize edit set namespace project 
+            kustomize edit set image PROJECT/IMAGE=$DOCKER_IMAGE
+            kubectl apply -k . 
