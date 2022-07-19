@@ -1,0 +1,2 @@
+- resoures limits implemented to deployment.yamls
+- autoscaling rules created for both deployments
