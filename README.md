@@ -1,2 +1,2 @@
 # devops-kubernetes
-repo for devops for kubernetes course
+repo for devops with kubernetes course
