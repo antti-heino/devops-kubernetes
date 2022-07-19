@@ -37,8 +37,7 @@ jobs:
       - name: Deploy
         run: |-
             cd ./exercise3.03/
+            kustomize edit set namespace project 
             kustomize edit set image PROJECT/IMAGE=$DOCKER_IMAGE
-            kustomize build . | kubectl apply -f manifests/
-            kubectl rollout status deployment $IMAGE
-            kubectl get services -o wide
+            kubectl apply -k . 
 
