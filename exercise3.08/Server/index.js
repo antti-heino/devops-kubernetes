@@ -24,14 +24,14 @@ let todos =
         }
     ]
 
-   //const pw = process.env.POSTGRES_PASSWORD.toString()
-    //console.log(pw)   
+const pw = process.env.POSTGRES_PASSWORD.toString()
+console.log(pw)   
 const { Client } = require('pg')
 const client = new Client({
       database: 'app',
       user: 'appuser',
-      password: 'qwerty',
-      host: "postgres-svc",
+      password: pw,
+      host: "34.88.62.14",
       port: 5432,
     })
 
@@ -42,7 +42,7 @@ const client = new Client({
       
         let existsQuery = `SELECT count(*) FROM information_schema.tables WHERE table_name = 'todo';`;
         client.query(existsQuery, (err, res) => {
-          var rowCount = Number(res.rows[0].count)
+          let rowCount = Number(res.rows[0].count)
           console.log(rowCount) 
       
           if (rowCount===0) {
