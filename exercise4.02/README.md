@@ -1,0 +1,3 @@
+- /heatlhz enpoint added to backend which returns 200 after DB connection is established.
+- readinessprobe implemented to server-deployment.yaml and values fine tuned
+- livenessprobe implemented to server-deployment.yaml
