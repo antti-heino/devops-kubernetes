@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logoutput-dep
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logoutput
+  template:
+    metadata:
+      labels:
+        app: logoutput
+    spec:
+      containers:
+        - name: logoutput
+          image: anttitmh/logoutput
+          readinessProbe:
+           periodSeconds: 5
+           initialDelaySeconds: 20
+           timeoutSeconds: 3
+           successThreshold: 1
+           httpGet:
+             path: /healthz
+             port: 3000
+          resources:
+            limits:
+              cpu: "150m"
+              memory: "100Mi"
