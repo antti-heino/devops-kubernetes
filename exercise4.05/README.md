@@ -1,0 +1,3 @@
+- field done added to DB table todo
+- PUT implemeted to api/todo
+- uses task descrpition as key, might not be the best option but as it is unique all is good

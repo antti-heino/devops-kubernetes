@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: server-dep
+  namespace: project
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: server
+  strategy:
+    canary:
+      steps:
+      - setWeight: 50
+      - analysis:
+          templates:
+          - templateName: argo-cpu  
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+        - name: server
+          image: anttitmh/server
+          readinessProbe:
+           initialDelaySeconds: 10
+           periodSeconds: 60
+           httpGet:
+             path: /healthz
+             port: 3001       
+          livenessProbe:
+            initialDelaySeconds: 100
+            periodSeconds: 60
+            httpGet:
+               path: /healthz
+               port: 3001
+          envFrom:
+            - secretRef:
+                name: pgsecret
+          resources:
+            limits:
+              cpu: "150m"
+              memory: "100Mi"
