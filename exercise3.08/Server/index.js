@@ -29,19 +29,22 @@ console.log(pw)
 const { Client } = require('pg')
 const client = new Client({
       database: 'app',
-      user: 'appuser',
-      password: pw,
+      user: 'postgres',
+      password: 'asdlkj',
       host: "34.88.62.14",
       port: 5432,
     })
 
     client.connect(function(err) {
     
+      console.log(err)
       try {
         
       
         let existsQuery = `SELECT count(*) FROM information_schema.tables WHERE table_name = 'todo';`;
         client.query(existsQuery, (err, res) => {
+          console.log(err)
+          console.log(res.rowCount.toString())
           let rowCount = Number(res.rows[0].count)
           console.log(rowCount) 
       
@@ -101,6 +104,7 @@ app.get('/api/todo', async (req, res) => {
   try {
     //res.json(todos);
     let selectQuery = `SELECT * FROM todo;`;
+    console.log(selectQuery)
     client.query(selectQuery, (err, result) => {
      if (err) {
         console.error(err);
@@ -124,13 +128,16 @@ app.get('/api/todo', async (req, res) => {
 app.post('/api/todo', async (req, res) => {
 
   try {
+    console.log("POST received")
     //Check whether todo is too long
     if (req.body.content.length > 140) {
         res.status(400).send("todo is over 140 characters")
         return
     }
     let todo = req.body.content
+    console.log("Inserting new todo" + todo)
     let newTodo = await client.query(`INSERT INTO todo (task) VALUES ('${todo}');`);
+    console.log(`INSERT INTO todo (task) VALUES ('${todo}');`)
     //res.json(newTodo.rows[0]);
     //todos = todos.concat(newTodo);
     res.status(201).send()
