@@ -28,7 +28,7 @@ jobs:
         run: echo "DOCKER_IMAGE=gcr.io/${{ secrets.GKE_PROJECT }}/$IMAGE:${GITHUB_REF#refs/heads/}$GITHUB_SHA" >> $GITHUB_ENV
       - name: Build
         run: |-
-            cd ./exercise3.04/Server/
+            cd ./exercise3.08/Server/
             docker build --tag "$DOCKER_IMAGE" .  
       - name: Publish
         run: docker push "$DOCKER_IMAGE"
@@ -36,7 +36,7 @@ jobs:
         uses: imranismail/setup-kustomize@v1
       - name: Deploy
         run: |-
-            cd ./exercise3.04/
+            cd ./exercise3.08/
             kubectl create namespace ${GITHUB_REF#refs/heads/} || true
             kubectl config set-context --current --namespace=${GITHUB_REF#refs/heads/}
             kustomize edit set namespace ${GITHUB_REF#refs/heads/}  
