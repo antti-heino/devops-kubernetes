@@ -1,0 +1,1 @@
+Moving to Cloud SQL. Couldn't be bothered with PSQL deployment every single time I have deleted the cluster. Plus management is a lot easier in DBaaS version.
