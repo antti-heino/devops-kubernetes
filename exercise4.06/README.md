@@ -1,0 +1,4 @@
+- telegram broadcaster implemented, only 
+- nats must be set up manually
+- "publish to nats" implemented to Server code. Only POST requests are published to nats. 
+- all manifests moved to a single folder and kustomization.yaml updated accordingly.
