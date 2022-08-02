@@ -1,0 +1,70 @@
+name: Deploy project gitops
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'exercise4.06/**'
+      - '.github/workflows/gitops-deploy.yaml'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    # Build and push
+    - name: Publish broadcaster
+      uses: docker/build-push-action@v1
+      with:
+        repository: anttitmh/broadcaster
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        tags: ${{ github.sha }}
+        path: exercise4.06/broadcaster
+    - name: Publish frontend
+      uses: docker/build-push-action@v1
+      with:
+        repository: anttitmh/frontend
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        tags: ${{ github.sha }}
+        path: exercise4.06/frontend
+    - name: Publish Server
+      uses: docker/build-push-action@v1
+      with:
+        repository: anttitmh/Server
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        tags: ${{ github.sha }}
+        path: exercise4.06/Server
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Kustomize
+      working-directory: exercise4.06
+      run: |-
+        curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+    # Update yamls
+    - name: Handle image placeholders
+      working-directory: exercise4.06
+      run: |-
+        ./kustomize edit set image BROADCASTER_IMAGE=anttitmh/broadcaster:${{ github.sha }}
+        ./kustomize edit set image FRONT_IMAGE=anttitmh/frontend:${{ github.sha }}
+        ./kustomize edit set image SERVER_IMAGE=anttitmh/Server:${{ github.sha }}
+    # Commit and push
+    - uses: EndBug/add-and-commit@v5
+      with:
+        add: 'exercise4.06/kustomization.yaml'
+        message: Release done ${{ github.sha }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
