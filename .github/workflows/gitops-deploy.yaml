@@ -1,6 +1,7 @@
 name: Deploy project gitops
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
