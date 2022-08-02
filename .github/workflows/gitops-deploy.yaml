@@ -1,6 +1,7 @@
 name: Deploy project gitops
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -35,7 +36,7 @@ jobs:
     - name: Publish Server
       uses: docker/build-push-action@v1
       with:
-        repository: anttitmh/Server
+        repository: anttitmh/server
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         tags: ${{ github.sha }}
@@ -60,7 +61,7 @@ jobs:
       run: |-
         ./kustomize edit set image BROADCASTER_IMAGE=anttitmh/broadcaster:${{ github.sha }}
         ./kustomize edit set image FRONT_IMAGE=anttitmh/frontend:${{ github.sha }}
-        ./kustomize edit set image SERVER_IMAGE=anttitmh/Server:${{ github.sha }}
+        ./kustomize edit set image SERVER_IMAGE=anttitmh/server:${{ github.sha }}
     # Commit and push
     - uses: EndBug/add-and-commit@v5
       with:
