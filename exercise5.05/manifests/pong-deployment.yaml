@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pong-dep
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pong
+  template:
+    metadata:
+      labels:
+        app: pong
+    spec:
+      containers:
+        - name: pong
+          image: anttitmh/pong
+          readinessProbe:
+           periodSeconds: 5
+           initialDelaySeconds: 20
+           timeoutSeconds: 3
+           successThreshold: 1
+           httpGet:
+             path: /healthz
+             port: 3001
+          resources:
+            limits:
+              cpu: "150m"
+              memory: "100Mi"
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: POSTGRES_PASSWORD
+          
