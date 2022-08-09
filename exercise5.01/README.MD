@@ -1,0 +1,3 @@
+- Manifests created from course examples
+- Index.js created with help from Kubernetes clients example library
+- 1. apply role, account and binding. 2. apply deployment. 3. apply DummySite wroks!
