@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-dep
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: server
+    spec:
+      containers:
+      - envFrom:
+        - secretRef:
+            name: pgsecret
+        image: SERVER_IMAGE
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3001
+          initialDelaySeconds: 100
+          periodSeconds: 60
+        name: server
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3001
+          initialDelaySeconds: 10
+          periodSeconds: 60
+        resources:
+          limits:
+            cpu: 150m
+            memory: 100Mi

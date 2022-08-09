@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-dep
+  namespace: project
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - image: FRONT_IMAGE
+        name: frontend
+        resources:
+          limits:
+            cpu: 150m
+            memory: 100Mi
